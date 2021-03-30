@@ -3,6 +3,7 @@ package services
 import (
 	"math/rand"
 	"sync"
+	"sync/atomic"
 	"time"
 	"github.com/AbduvokhidovRustamzhon/quote/constants"
 	"github.com/AbduvokhidovRustamzhon/quote/pkg/model"
@@ -123,4 +124,32 @@ func (quotes *Quotes) GetRandomQuote() (*model.Quote, error) {
 func randomNumber(length int) int {
 	rand.Seed(time.Now().UnixNano())
 	return rand.Intn(length)
+}
+
+// Delete Quotes old quotes that were created 1 hour ago
+func (quotes *Quotes) DeleteOldQuotes() {
+
+	for _, quote := range quotes.Quotes {
+		if timePassed(time.Now().Add( - time.Hour), quote.CreatedAt) {
+			quotes.Delete(quote.ID)
+		}
+	}
+}
+
+// Check validity for time passed
+func timePassed(check, date time.Time) bool {
+	return check.After(date)
+}
+
+// worker that will check and delete old quotes
+func Worker(d time.Duration, f func()) {
+	var reentrancyFlag int64
+	for range time.Tick(d) {
+		if atomic.CompareAndSwapInt64(&reentrancyFlag, 0, 1) {
+			defer atomic.StoreInt64(&reentrancyFlag, 0)
+		} else {
+			return
+		}
+		f()
+	}
 }

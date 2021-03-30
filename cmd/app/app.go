@@ -4,7 +4,6 @@ package app
 import (
 	"encoding/json"
 	"net/http"
-
 	"github.com/AbduvokhidovRustamzhon/quote/pkg/services"
 	"github.com/julienschmidt/httprouter"
 )
