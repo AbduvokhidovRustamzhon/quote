@@ -77,5 +77,15 @@ func (server *server) handleGetAllQuotesByCategory(writer http.ResponseWriter, r
 		return
 	}
 	SendResponse(writer, quotes)
+}
+
+func (server *server) handleGetRandomQuote(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
+	quote, err := server.quotes.GetRandomQuote()
+	if err != nil {
+		log.Print(err)
+		http.Error(writer, http.StatusText(http.StatusNotFound), http.StatusNotFound)
+		return
+	}
+	SendResponse(writer, quote)
 
 }

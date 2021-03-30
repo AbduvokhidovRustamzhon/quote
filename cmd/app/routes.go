@@ -7,4 +7,5 @@ func (server *server) Init(){
 	server.router.DELETE("/api/quote/delete/:id", server.handleDeleteQuote)
 	server.router.GET("/api/quote/quotes", server.handlerGetAllQuotes)
 	server.router.GET("/api/quote/quotes/:categorytype", server.handleGetAllQuotesByCategory)
+	server.router.GET("/api/quote/quotes/random", server.handleGetRandomQuote)
 }

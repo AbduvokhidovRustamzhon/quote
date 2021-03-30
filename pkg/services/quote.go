@@ -1,7 +1,9 @@
 package services
 
 import (
+	"math/rand"
 	"sync"
+	"time"
 	"github.com/AbduvokhidovRustamzhon/quote/constants"
 	"github.com/AbduvokhidovRustamzhon/quote/pkg/model"
 	"github.com/google/uuid"
@@ -73,7 +75,7 @@ func (quote *Quotes) GetAllQuotes() ([]model.Quote, error) {
 	return quotes, nil
 }
 
-// Get All Quotes by Categore
+// Get All Quotes by Category
 func (quote *Quotes) GetAllQuotesByCategory(category string) ([]model.Quote, error) {
 	quote.Lock()
 	defer  quote.Unlock()
@@ -90,4 +92,35 @@ func (quote *Quotes) GetAllQuotesByCategory(category string) ([]model.Quote, err
 	}
 
 	return quotes, nil
+}
+
+
+// Get Quote from randomizer
+func (quotes *Quotes) GetRandomQuote() (*model.Quote, error) {
+	quotes.Lock()
+	defer  quotes.Unlock()
+	count := 0
+	lengthOfQuotes := len(quotes.Quotes)
+	if lengthOfQuotes == 0 {
+		return nil, constants.ErrMustBePositive
+	}
+	randomNumber := randomNumber(lengthOfQuotes)
+	if randomNumber == 0 {
+		return nil, constants.ErrMustBePositive
+	}
+
+	for _, quote := range quotes.Quotes {
+		count++
+		if count == randomNumber {
+			return &quote, nil
+		}
+
+	}
+	return nil, constants.ErrNotFound
+}
+
+// Get random number in diapazone (0, length)
+func randomNumber(length int) int {
+	rand.Seed(time.Now().UnixNano())
+	return rand.Intn(length)
 }
