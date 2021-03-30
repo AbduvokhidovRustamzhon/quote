@@ -2,7 +2,7 @@ package services
 
 import (
 	"sync"
-
+	"github.com/AbduvokhidovRustamzhon/quote/constants"
 	"github.com/AbduvokhidovRustamzhon/quote/pkg/model"
 	"github.com/google/uuid"
 )
@@ -28,4 +28,18 @@ func (q *Quotes) CreateQuote(quote *model.Quote) (err error) {
 		return err
 	}
 	return nil
+}
+
+// Edit Quote 
+func (q *Quotes) EditQuote(quote *model.Quote) (*model.Quote, error) {
+	q.Lock()
+	defer  q.Unlock()
+	for key, _ := range q.Quotes {
+		if key == quote.ID {
+			q.Quotes[quote.ID] = *quote
+			return quote, nil
+		}
+
+	}
+	return nil, constants.ErrIDNotFound
 }

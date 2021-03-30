@@ -10,20 +10,37 @@ import (
 )
 
 
-func (server *server) handleCreateQuote(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
+func (server *server) handleCreateQuote(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
 	quote := model.Quote{}
 
-	err := json.NewDecoder(r.Body).Decode(&quote)
+	err := json.NewDecoder(request.Body).Decode(&quote)
 	if err != nil {
-		http.Error(w, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
 		return
 	}
 	quote.CreatedAt = time.Now()
 	err = server.quotes.CreateQuote(&quote)
 	if err != nil {
 		log.Print(err)
-		http.Error(w, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
+		http.Error(writer, http.StatusText(http.StatusInternalServerError), http.StatusInternalServerError)
 		return
 	}
-	SendResponse(w, quote)
+	SendResponse(writer, quote)
+}
+
+func (s *server) handlerEditQuote(writer http.ResponseWriter, request *http.Request, _ httprouter.Params) {
+	quote := &model.Quote{}
+	err := json.NewDecoder(request.Body).Decode(&quote)
+	if err != nil {
+		log.Print(err)
+		http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	editQuote, err := s.quotes.EditQuote(quote)
+	if err != nil {
+		log.Print(err)
+		http.Error(writer, "id not exist", http.StatusNotFound)
+		return
+	}
+	SendResponse(writer, editQuote)
 }
