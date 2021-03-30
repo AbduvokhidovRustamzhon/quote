@@ -1,11 +1,10 @@
 package app
 
-
-func (server *server) Init(){
-	server.router.POST("/api/quote/create", server.handleCreateQuote)
-	server.router.POST("/api/quote/editquote", server.handlerEditQuote)
-	server.router.DELETE("/api/quote/delete/:id", server.handleDeleteQuote)
-	server.router.GET("/api/quote/quotes", server.handlerGetAllQuotes)
-	server.router.GET("/api/quote/quotes/:categorytype", server.handleGetAllQuotesByCategory)
-	server.router.GET("/api/quote/quotes/random", server.handleGetRandomQuote)
+func (s *server) Init() {
+	s.router.POST("/api/quotes", s.createQuote)
+	s.router.PUT("/api/quotes/:id", s.editQuote)
+	s.router.DELETE("/api/quotes/:id", s.deleteQuote)
+	s.router.GET("/api/quotes", s.getAllQuotes)
+	s.router.GET("/api/quotes/:categorytype", s.getAllQuotesByCategory)
+	s.router.GET("/api/random/quotes/", s.handleGetRandomQuote)
 }
