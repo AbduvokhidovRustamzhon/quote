@@ -46,12 +46,22 @@ func (server *server) handlerEditQuote(writer http.ResponseWriter, request *http
 }
 
 
-func (server *server) handleRemoveQuote(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+func (server *server) handleDeleteQuote(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
 	id := params.ByName("id")
 	quotes, err := server.quotes.Delete(id)
 	if err == false {
 		log.Print(err)
 		http.Error(writer, http.StatusText(http.StatusBadRequest), http.StatusBadRequest)
+		return
+	}
+	SendResponse(writer, quotes)
+}
+
+func (server *server) handlerGetAllQuotes(writer http.ResponseWriter, request *http.Request, _ httprouter.Params)  {
+	quotes, err := server.quotes.GetAllQuotes()
+	if err != nil {
+		log.Print(err)
+		http.Error(writer, http.StatusText(http.StatusNotFound), http.StatusNotFound)
 		return
 	}
 	SendResponse(writer, quotes)
