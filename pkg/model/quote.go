@@ -1,6 +1,9 @@
-package models
+package model
 
-import "time"
+import (
+	"time"
+)
+
 
 type Quote struct {
 	ID        string    `json:"id"`
@@ -9,3 +12,4 @@ type Quote struct {
 	Category  string    `json:"category"`
 	CreatedAt time.Time `json:"created_at"`
 }
+
