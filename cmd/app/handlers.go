@@ -66,3 +66,16 @@ func (server *server) handlerGetAllQuotes(writer http.ResponseWriter, request *h
 	}
 	SendResponse(writer, quotes)
 }
+
+func (server *server) handleGetAllQuotesByCategory(writer http.ResponseWriter, request *http.Request, params httprouter.Params) {
+	category := params.ByName("categorytype")
+
+	quotes, err := server.quotes.GetAllQuotesByCategory(category)
+	if err != nil {
+		log.Print(err)
+		http.Error(writer, "Category Not Found", http.StatusNotFound)
+		return
+	}
+	SendResponse(writer, quotes)
+
+}

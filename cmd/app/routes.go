@@ -1,9 +1,10 @@
 package app
 
 
-func (s *server) Init(){
-	s.router.POST("/api/quote/create", s.handleCreateQuote)
-	s.router.POST("/api/quote/editquote", s.handlerEditQuote)
-	s.router.DELETE("/api/quote/delete/:id", s.handleDeleteQuote)
-	s.router.GET("/api/quote/quotes", s.handlerGetAllQuotes)
+func (server *server) Init(){
+	server.router.POST("/api/quote/create", server.handleCreateQuote)
+	server.router.POST("/api/quote/editquote", server.handlerEditQuote)
+	server.router.DELETE("/api/quote/delete/:id", server.handleDeleteQuote)
+	server.router.GET("/api/quote/quotes", server.handlerGetAllQuotes)
+	server.router.GET("/api/quote/quotes/:categorytype", server.handleGetAllQuotesByCategory)
 }

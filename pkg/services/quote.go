@@ -72,3 +72,22 @@ func (quote *Quotes) GetAllQuotes() ([]model.Quote, error) {
 	}
 	return quotes, nil
 }
+
+// Get All Quotes by Categore
+func (quote *Quotes) GetAllQuotesByCategory(category string) ([]model.Quote, error) {
+	quote.Lock()
+	defer  quote.Unlock()
+	quotes := []model.Quote{}
+
+	for _, value := range quote.Quotes {
+		if value.Category == category {
+			quotes = append(quotes, value)
+
+		}
+	}
+	if quotes == nil {
+		return nil, constants.ErrNotFound
+	}
+
+	return quotes, nil
+}
